@@ -3,8 +3,10 @@ package dianaszczepankowska.figures;
 
 import java.util.ArrayList;
 
-public class Mesh {
-    public ArrayList<Triangle> tris = new ArrayList<>();
+public record Figure(ArrayList<Triangle> tris) {
+    public Figure(){
+        this(new ArrayList<>());
+    }
 
     public void add(Triangle t) {
         tris.add(t);
