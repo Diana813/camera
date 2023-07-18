@@ -1,23 +1,20 @@
 package dianaszczepankowska;
 
+import dianaszczepankowska.figures.Coordinates;
 import dianaszczepankowska.figures.Figure;
 import dianaszczepankowska.figures.Triangle;
-import dianaszczepankowska.figures.Coordinates;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Scene extends JPanel {
 
-    private final Figure cubeLeft1;
-    private final Figure cubeLeft2;
-    private final Figure cubeLeft3;
-    private final Figure cubeRight1;
-    private final Figure cubeRight2;
-    private final Figure cubeRight3;
+    private final List<Figure> cubes;
     private final Matrix matProj;
     private float fTheta;
     private final BufferedImage backBuffer;
@@ -26,25 +23,31 @@ public class Scene extends JPanel {
     private final int screenWidth;
     private final int screenHeight;
 
+    private final Coordinates camera;
+
+    private static final int OFFSET = 20;
+
     public Scene(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.camera = new Coordinates(0, 0, 0);
 
 
         matProj = new Matrix();
         fTheta = 0.0f;
 
-        cubeLeft1 = createCube(0, 0, 0);
+        cubes = new ArrayList<>();
 
-        cubeLeft2 = createCube(0, 0, 3);
+        for (int i = 0; i < 10; i++) {
+            Figure cube;
+            if (i % 2 == 0) {
+                cube = createCube(0, 0, (float) (1.5 * i));
+            } else {
+                cube = createCube(3, 0, (float) (1.5 * (i - 1)));
+            }
 
-        cubeLeft3 = createCube(0, 0, 6);
-
-        cubeRight1 = createCube(3, 0, 0);
-
-        cubeRight2 = createCube(3, 0, 3);
-
-        cubeRight3 = createCube(3, 0, 6);
+            cubes.add(cube);
+        }
 
         // Start the update loop
         Timer timer = new Timer(16, e -> {
@@ -69,6 +72,7 @@ public class Scene extends JPanel {
 
         backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         backBufferGraphics = (Graphics2D) backBuffer.getGraphics();
+
     }
 
     @Override
@@ -80,15 +84,8 @@ public class Scene extends JPanel {
 
     public void draw(Graphics g) {
         super.paint(g);
-
         clearScreen(g);
-        drawTriangles(cubeLeft1, g);
-        drawTriangles(cubeLeft2, g);
-        drawTriangles(cubeLeft3, g);
-        drawTriangles(cubeRight1, g);
-        drawTriangles(cubeRight2, g);
-        drawTriangles(cubeRight3, g);
-
+        cubes.forEach(it -> drawTriangles(it, g));
     }
 
 
@@ -174,36 +171,67 @@ public class Scene extends JPanel {
             triRotatedZX.coordinates()[1] = triRotatedZ.coordinates()[1].multiplyByMatrix(matRotX);
             triRotatedZX.coordinates()[2] = triRotatedZ.coordinates()[2].multiplyByMatrix(matRotX);
 
-            triRotatedZX = offsetIntoScreen(9, triRotatedZX);
+            triRotatedZX = offsetIntoScreen(triRotatedZX);
 
-            fitIntoProjectionMatrix(triProjected, triRotatedZX);
+            // Use Cross-Product to get surface normal
+            Coordinates normal, line1, line2;
+            line1 = new Coordinates(
+                    triRotatedZX.coordinates()[1].x() - triRotatedZX.coordinates()[0].x(),
+                    triRotatedZX.coordinates()[1].y() - triRotatedZX.coordinates()[0].y(),
+                    triRotatedZX.coordinates()[1].z() - triRotatedZX.coordinates()[0].z()
+            );
 
-            triProjected = scaleIntoView(triProjected);
+            line2 = new Coordinates(
+                    triRotatedZX.coordinates()[2].x() - triRotatedZX.coordinates()[0].x(),
+                    triRotatedZX.coordinates()[2].y() - triRotatedZX.coordinates()[0].y(),
+                    triRotatedZX.coordinates()[2].z() - triRotatedZX.coordinates()[0].z()
+            );
 
-            // Rasterize triangle
-            g.setColor(tri.color());
-            int[] xPoints = {(int) triProjected.coordinates()[0].x(), (int) triProjected.coordinates()[1].x(), (int) triProjected.coordinates()[2].x()};
-            int[] yPoints = {(int) triProjected.coordinates()[0].y(), (int) triProjected.coordinates()[1].y(), (int) triProjected.coordinates()[2].y()};
-            g.fillPolygon(xPoints, yPoints, 3);
+            normal = new Coordinates(
+                    line1.y() * line2.z() - line1.z() * line2.y(),
+                    line1.z() * line2.x() - line1.x() * line2.z(),
+                    line1.x() * line2.y() - line1.y() * line2.x()
+            );
+
+            float l = (float) Math.sqrt(normal.x() * normal.x() + normal.y() * normal.y() + normal.z() * normal.z());
+
+            normal = new Coordinates(normal.x()/l,  normal.y()/l, normal.z()/l);
+
+            //if (normal.z < 0)
+            if (normal.x() * (triRotatedZX.coordinates()[0].x() - camera.x()) +
+                    normal.y() * (triRotatedZX.coordinates()[0].y() - camera.y()) +
+                    normal.z() * (triRotatedZX.coordinates()[0].z() - camera.z()) < 0.0f) {
+
+                fitIntoProjectionMatrix(triProjected, triRotatedZX);
+
+                triProjected = scaleIntoView(triProjected);
+
+                // Rasterize triangle
+                g.setColor(tri.color());
+                int[] xPoints = {(int) triProjected.coordinates()[0].x(), (int) triProjected.coordinates()[1].x(), (int) triProjected.coordinates()[2].x()};
+                int[] yPoints = {(int) triProjected.coordinates()[0].y(), (int) triProjected.coordinates()[1].y(), (int) triProjected.coordinates()[2].y()};
+                g.fillPolygon(xPoints, yPoints, 3);
+
+            }
         }
     }
 
-    private Triangle offsetIntoScreen(float offset, Triangle triRotatedZX){
+    private Triangle offsetIntoScreen(Triangle triRotatedZX) {
         return new Triangle(
-                new Coordinates(triRotatedZX.coordinates()[0].x(), triRotatedZX.coordinates()[0].y(), triRotatedZX.coordinates()[0].z() + offset),
-                new Coordinates(triRotatedZX.coordinates()[1].x(), triRotatedZX.coordinates()[1].y(), triRotatedZX.coordinates()[1].z() + offset),
-                new Coordinates(triRotatedZX.coordinates()[2].x(), triRotatedZX.coordinates()[2].y(), triRotatedZX.coordinates()[2].z() + offset),
+                new Coordinates(triRotatedZX.coordinates()[0].x(), triRotatedZX.coordinates()[0].y(), triRotatedZX.coordinates()[0].z() + OFFSET),
+                new Coordinates(triRotatedZX.coordinates()[1].x(), triRotatedZX.coordinates()[1].y(), triRotatedZX.coordinates()[1].z() + OFFSET),
+                new Coordinates(triRotatedZX.coordinates()[2].x(), triRotatedZX.coordinates()[2].y(), triRotatedZX.coordinates()[2].z() + OFFSET),
                 triRotatedZX.color()
         );
     }
 
-    private void fitIntoProjectionMatrix(Triangle triProjected, Triangle triRotatedZX){
+    private void fitIntoProjectionMatrix(Triangle triProjected, Triangle triRotatedZX) {
         triProjected.coordinates()[0] = triRotatedZX.coordinates()[0].multiplyByMatrix(matProj);
         triProjected.coordinates()[1] = triRotatedZX.coordinates()[1].multiplyByMatrix(matProj);
         triProjected.coordinates()[2] = triRotatedZX.coordinates()[2].multiplyByMatrix(matProj);
     }
 
-    private Triangle scaleIntoView(Triangle triProjected){
+    private Triangle scaleIntoView(Triangle triProjected) {
         triProjected = new Triangle(
                 new Coordinates(triProjected.coordinates()[0].x() + 1.0f, triProjected.coordinates()[0].y() + 1.0f, triProjected.coordinates()[0].z()),
                 new Coordinates(triProjected.coordinates()[1].x() + 1.0f, triProjected.coordinates()[1].y() + 1.0f, triProjected.coordinates()[1].z()),
