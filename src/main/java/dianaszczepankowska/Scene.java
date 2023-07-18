@@ -11,7 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Scene extends JPanel {
-    private final Figure figureCube;
+
+    private final Figure cubeLeft1;
+    private final Figure cubeLeft2;
+    private final Figure cubeLeft3;
+    private final Figure cubeRight1;
+    private final Figure cubeRight2;
+    private final Figure cubeRight3;
     private final Matrix matProj;
     private float fTheta;
     private final BufferedImage backBuffer;
@@ -24,28 +30,21 @@ public class Scene extends JPanel {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-        figureCube = new Figure();
+
         matProj = new Matrix();
         fTheta = 0.0f;
 
-        // Create the cube mesh
-        figureCube.add(new Triangle(new Coordinates(0, 0, 0), new Coordinates(0, 1, 0), new Coordinates(1, 1, 0), new Color(0, 0, 255, 128)));
-        figureCube.add(new Triangle(new Coordinates(0, 0, 0), new Coordinates(1, 1, 0), new Coordinates(1, 0, 0), new Color(0, 255, 0, 128)));
+        cubeLeft1 = createCube(0, 0, 0);
 
-        figureCube.add(new Triangle(new Coordinates(1, 0, 0), new Coordinates(1, 1, 0), new Coordinates(1, 1, 1), new Color(0, 255, 255, 128)));
-        figureCube.add(new Triangle(new Coordinates(1, 0, 0), new Coordinates(1, 1, 1), new Coordinates(1, 0, 1), new Color(255, 0, 0, 128)));
+        cubeLeft2 = createCube(0, 0, 3);
 
-        figureCube.add(new Triangle(new Coordinates(1, 0, 1), new Coordinates(1, 1, 1), new Coordinates(0, 1, 1), new Color(255, 0, 255, 128)));
-        figureCube.add(new Triangle(new Coordinates(1, 0, 1), new Coordinates(0, 1, 1), new Coordinates(0, 0, 1), new Color(255, 255, 0, 128)));
+        cubeLeft3 = createCube(0, 0, 6);
 
-        figureCube.add(new Triangle(new Coordinates(0, 0, 1), new Coordinates(0, 1, 1), new Coordinates(0, 1, 0), new Color(255, 255, 255, 128)));
-        figureCube.add(new Triangle(new Coordinates(0, 0, 1), new Coordinates(0, 1, 0), new Coordinates(0, 0, 0), new Color(128, 128, 128, 128)));
+        cubeRight1 = createCube(3, 0, 0);
 
-        figureCube.add(new Triangle(new Coordinates(0, 1, 0), new Coordinates(0, 1, 1), new Coordinates(1, 1, 1), new Color(192, 192, 192, 128)));
-        figureCube.add(new Triangle(new Coordinates(0, 1, 0), new Coordinates(1, 1, 1), new Coordinates(1, 1, 0), new Color(64, 64, 64, 128)));
+        cubeRight2 = createCube(3, 0, 3);
 
-        figureCube.add(new Triangle(new Coordinates(0, 0, 0), new Coordinates(1, 0, 0), new Coordinates(1, 0, 1), new Color(128, 128, 255, 128)));
-        figureCube.add(new Triangle(new Coordinates(0, 0, 0), new Coordinates(1, 0, 1), new Coordinates(0, 0, 1), new Color(128, 255, 128, 128)));
+        cubeRight3 = createCube(3, 0, 6);
 
         // Start the update loop
         Timer timer = new Timer(16, e -> {
@@ -83,7 +82,46 @@ public class Scene extends JPanel {
         super.paint(g);
 
         clearScreen(g);
+        drawTriangles(cubeLeft1, g);
+        drawTriangles(cubeLeft2, g);
+        drawTriangles(cubeLeft3, g);
+        drawTriangles(cubeRight1, g);
+        drawTriangles(cubeRight2, g);
+        drawTriangles(cubeRight3, g);
 
+    }
+
+
+    private void clearScreen(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+    }
+
+    private Figure createCube(float x, float y, float z) {
+        Figure figureCube = new Figure();
+
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 0), new Coordinates(x + 0, y + 1, z + 0), new Coordinates(x + 1, y + 1, z + 0), new Color(0, 0, 255, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 0), new Coordinates(x + 1, y + 1, z + 0), new Coordinates(x + 1, y + 0, z + 0), new Color(0, 255, 0, 128)));
+
+        figureCube.add(new Triangle(new Coordinates(x + 1, y + 0, z + 0), new Coordinates(x + 1, y + 1, z + 0), new Coordinates(x + 1, y + 1, z + 1), new Color(0, 255, 255, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 1, y + 0, z + 0), new Coordinates(x + 1, y + 1, z + 1), new Coordinates(x + 1, y + 0, z + 1), new Color(255, 0, 0, 128)));
+
+        figureCube.add(new Triangle(new Coordinates(x + 1, y + 0, z + 1), new Coordinates(x + 1, y + 1, z + 1), new Coordinates(x + 0, y + 1, z + 1), new Color(255, 0, 255, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 1, y + 0, z + 1), new Coordinates(x + 0, y + 1, z + 1), new Coordinates(x + 0, y + 0, z + 1), new Color(255, 255, 0, 128)));
+
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 1), new Coordinates(x + 0, y + 1, z + 1), new Coordinates(x + 0, y + 1, z + 0), new Color(255, 255, 255, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 1), new Coordinates(x + 0, y + 1, z + 0), new Coordinates(x + 0, y + 0, z + 0), new Color(128, 128, 128, 128)));
+
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 1, z + 0), new Coordinates(x + 0, y + 1, z + 1), new Coordinates(x + 1, y + 1, z + 1), new Color(192, 192, 192, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 1, z + 0), new Coordinates(x + 1, y + 1, z + 1), new Coordinates(x + 1, y + 1, z + 0), new Color(64, 64, 64, 128)));
+
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 0), new Coordinates(x + 1, y + 0, z + 0), new Coordinates(x + 1, y + 0, z + 1), new Color(128, 128, 255, 128)));
+        figureCube.add(new Triangle(new Coordinates(x + 0, y + 0, z + 0), new Coordinates(x + 1, y + 0, z + 1), new Coordinates(x + 0, y + 0, z + 1), new Color(128, 255, 128, 128)));
+
+        return figureCube;
+    }
+
+    private void drawTriangles(Figure figureCube, Graphics g) {
         // Set up rotation matrices
         Matrix matRotZ = new Matrix();
         Matrix matRotX = new Matrix();
@@ -136,34 +174,11 @@ public class Scene extends JPanel {
             triRotatedZX.coordinates()[1] = triRotatedZ.coordinates()[1].multiplyByMatrix(matRotX);
             triRotatedZX.coordinates()[2] = triRotatedZ.coordinates()[2].multiplyByMatrix(matRotX);
 
-            // Offset into the screen
-            triRotatedZX = new Triangle(
-                    new Coordinates(triRotatedZX.coordinates()[0].x(), triRotatedZX.coordinates()[0].y(), triRotatedZX.coordinates()[0].z() + 3.0f),
-                    new Coordinates(triRotatedZX.coordinates()[1].x(), triRotatedZX.coordinates()[1].y(), triRotatedZX.coordinates()[1].z() + 3.0f),
-                    new Coordinates(triRotatedZX.coordinates()[2].x(), triRotatedZX.coordinates()[2].y(), triRotatedZX.coordinates()[2].z() + 3.0f),
-                    triRotatedZX.color()
-            );
+            triRotatedZX = offsetIntoScreen(9, triRotatedZX);
 
-            // Project triangles from 3D --> 2D
-            triProjected.coordinates()[0] = triRotatedZX.coordinates()[0].multiplyByMatrix(matProj);
-            triProjected.coordinates()[1] = triRotatedZX.coordinates()[1].multiplyByMatrix(matProj);
-            triProjected.coordinates()[2] = triRotatedZX.coordinates()[2].multiplyByMatrix(matProj);
+            fitIntoProjectionMatrix(triProjected, triRotatedZX);
 
-            // Scale into view
-            triProjected = new Triangle(
-                    new Coordinates(triProjected.coordinates()[0].x() + 1.0f, triProjected.coordinates()[0].y() + 1.0f, triProjected.coordinates()[0].z()),
-                    new Coordinates(triProjected.coordinates()[1].x() + 1.0f, triProjected.coordinates()[1].y() + 1.0f, triProjected.coordinates()[1].z()),
-                    new Coordinates(triProjected.coordinates()[2].x() + 1.0f, triProjected.coordinates()[2].y() + 1.0f, triProjected.coordinates()[2].z()),
-                    triProjected.color()
-            );
-
-            triProjected = new Triangle(
-                    new Coordinates(triProjected.coordinates()[0].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[0].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[0].z()),
-                    new Coordinates(triProjected.coordinates()[1].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[1].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[1].z()),
-                    new Coordinates(triProjected.coordinates()[2].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[2].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[2].z()),
-                    triProjected.color()
-            );
-
+            triProjected = scaleIntoView(triProjected);
 
             // Rasterize triangle
             g.setColor(tri.color());
@@ -173,8 +188,34 @@ public class Scene extends JPanel {
         }
     }
 
-    private void clearScreen(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+    private Triangle offsetIntoScreen(float offset, Triangle triRotatedZX){
+        return new Triangle(
+                new Coordinates(triRotatedZX.coordinates()[0].x(), triRotatedZX.coordinates()[0].y(), triRotatedZX.coordinates()[0].z() + offset),
+                new Coordinates(triRotatedZX.coordinates()[1].x(), triRotatedZX.coordinates()[1].y(), triRotatedZX.coordinates()[1].z() + offset),
+                new Coordinates(triRotatedZX.coordinates()[2].x(), triRotatedZX.coordinates()[2].y(), triRotatedZX.coordinates()[2].z() + offset),
+                triRotatedZX.color()
+        );
+    }
+
+    private void fitIntoProjectionMatrix(Triangle triProjected, Triangle triRotatedZX){
+        triProjected.coordinates()[0] = triRotatedZX.coordinates()[0].multiplyByMatrix(matProj);
+        triProjected.coordinates()[1] = triRotatedZX.coordinates()[1].multiplyByMatrix(matProj);
+        triProjected.coordinates()[2] = triRotatedZX.coordinates()[2].multiplyByMatrix(matProj);
+    }
+
+    private Triangle scaleIntoView(Triangle triProjected){
+        triProjected = new Triangle(
+                new Coordinates(triProjected.coordinates()[0].x() + 1.0f, triProjected.coordinates()[0].y() + 1.0f, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[1].x() + 1.0f, triProjected.coordinates()[1].y() + 1.0f, triProjected.coordinates()[1].z()),
+                new Coordinates(triProjected.coordinates()[2].x() + 1.0f, triProjected.coordinates()[2].y() + 1.0f, triProjected.coordinates()[2].z()),
+                triProjected.color()
+        );
+
+        return new Triangle(
+                new Coordinates(triProjected.coordinates()[0].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[0].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[1].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[1].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[1].z()),
+                new Coordinates(triProjected.coordinates()[2].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[2].y() * 0.5f * (float) screenHeight, triProjected.coordinates()[2].z()),
+                triProjected.color()
+        );
     }
 }
