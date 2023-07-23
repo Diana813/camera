@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="create street view">
+    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="add camera position to the view">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Matrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Figure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Figure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Triangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Triangle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,12 +50,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "settings.editor.selected.configurable": "editor.preferences.import"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="dianaszczepankowska" />
@@ -133,7 +139,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689662233500</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add camera position to the view">
+      <created>1689710095659</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1689710095659</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,6 +164,7 @@
     <MESSAGE value="rotating cube" />
     <MESSAGE value="refactor" />
     <MESSAGE value="create street view" />
-    <option name="LAST_COMMIT_MESSAGE" value="create street view" />
+    <MESSAGE value="add camera position to the view" />
+    <option name="LAST_COMMIT_MESSAGE" value="add camera position to the view" />
   </component>
 </project>

@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
 
+    implementation("org.projectlombok:lombok:1.18.26")
 }
 
 tasks.getByName<Test>("test") {
