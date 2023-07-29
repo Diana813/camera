@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 public class Scene extends JPanel {
 
     private final List<Figure> cubes;
-    private final Matrix projectionMatrix4x4;
+    private Matrix projectionMatrix4x4;
     private final float fTheta;
     private final BufferedImage backBuffer;
     private final Graphics2D backBufferGraphics;
@@ -32,15 +32,20 @@ public class Scene extends JPanel {
 
     private Coordinates lookingDirection;
 
-    private float cameraRotationInYZ =0;
+    private float cameraRotationInY = 0;
+
+    private float cameraRotationInZ = 0;
+    private float cameraRotationInX = 0;
 
     private static final int OFFSET = 0;
+
+    private float fieldOfViewDegrees;
 
     public Scene(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.camera = new Coordinates(0, 0, 0);
-        this.lookingDirection = new Coordinates(0, 0, 1);
+        this.lookingDirection = new Coordinates(0, 0, 0);
 
         fTheta = 0.0f;
 
@@ -57,16 +62,9 @@ public class Scene extends JPanel {
             cubes.add(cube);
         }
 
-      /*  // Start the update loop
-        Timer timer = new Timer(16, e -> {
-            fTheta += 0.02f;
-            repaint();
-        });
-        timer.start();*/
-
         float near = 0.1f;
         float far = 1000.0f;
-        float fieldOfViewDegrees = 90.0f;
+        fieldOfViewDegrees = 90.0f;
         float aspectRatio = (float) screenHeight / (float) screenWidth;
 
         projectionMatrix4x4 = createProjectionMatrix(fieldOfViewDegrees, aspectRatio, near, far);
@@ -83,7 +81,9 @@ public class Scene extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
+                handleKeyReleased(e);
             }
+
         });
     }
 
@@ -117,8 +117,23 @@ public class Scene extends JPanel {
 
         Coordinates up = new Coordinates(0, 1, 0);
         Coordinates target = new Coordinates(0, 0, 1);
-        Matrix matCameraRot = Matrix.createRotationYMatrix(cameraRotationInYZ);
-        lookingDirection = target.multiplyByMatrix(matCameraRot).multiply(0.8f * 1.5f);
+        Matrix rotationYMatrix = Matrix.createRotationYMatrix(cameraRotationInY);
+        Matrix rotationXMatrix = Matrix.createRotationXMatrix(cameraRotationInX);
+        Matrix rotationZMatrix = Matrix.createRotationZMatrix(cameraRotationInZ);
+
+        lookingDirection = target.multiply(0.8f * 1.5f);
+
+        if(cameraRotationInY != 0) {
+            lookingDirection = lookingDirection.multiplyByMatrix(rotationYMatrix);
+        }
+        if (cameraRotationInX != 0) {
+            lookingDirection = lookingDirection.multiplyByMatrix(rotationXMatrix);
+        }
+        if (cameraRotationInZ != 0) {
+            lookingDirection = lookingDirection.multiplyByMatrix(rotationZMatrix);
+        }
+
+
         target = camera.add(lookingDirection);
         Matrix matCamera = Matrix.pointAt(camera, target, up);
 
@@ -283,7 +298,6 @@ public class Scene extends JPanel {
 
     public void moveForward() {
         float fElapsedTime = 0.01f;
-
         Coordinates vForward = lookingDirection.multiply(8.0f * fElapsedTime);
         camera = camera.add(vForward);
         repaint();
@@ -291,27 +305,79 @@ public class Scene extends JPanel {
 
     public void moveBackward() {
         float fElapsedTime = 0.01f;
-
         Coordinates vBackward = lookingDirection.multiply(-8.0f * fElapsedTime);
         camera = camera.add(vBackward);
         repaint();
     }
 
-    public void turnLeft() {
+    public void lookLeft() {
         float fElapsedTime = 0.01f;
+        cameraRotationInY -= 2.0f * fElapsedTime;
+        repaint();
 
-        cameraRotationInYZ -= 2.0f * fElapsedTime;
-        lookingDirection = new Coordinates((float) Math.sin(cameraRotationInYZ), 0, (float) Math.cos(cameraRotationInYZ)).normalize();
+    }
+
+    public void lookRight() {
+        float fElapsedTime = 0.01f;
+        cameraRotationInY += 2.0f * fElapsedTime;
         repaint();
     }
 
-    public void turnRight() {
+    public void lookDown(){
         float fElapsedTime = 0.01f;
-
-        cameraRotationInYZ += 2.0f * fElapsedTime;
-        lookingDirection = new Coordinates((float) Math.sin(cameraRotationInYZ), 0, (float) Math.cos(cameraRotationInYZ)).normalize();
+        cameraRotationInX -= 2 * fElapsedTime;
         repaint();
     }
+
+    public void lookUp() {
+        float fElapsedTime = 0.01f;
+        cameraRotationInX += 2 * fElapsedTime;
+        repaint();
+    }
+
+    public void rotateZ(float angle){
+        float fElapsedTime = 0.01f;
+        cameraRotationInZ += angle * fElapsedTime;
+        repaint();
+    }
+
+    public void zoomIn() {
+        float zoomFactor = 1.1f;
+        fieldOfViewDegrees /= zoomFactor;
+        float near = 0.1f;
+        float far = 1000.0f;
+        float aspectRatio = (float) screenHeight / (float) screenWidth;
+        projectionMatrix4x4 = createProjectionMatrix(fieldOfViewDegrees, aspectRatio, near, far);
+        repaint();
+    }
+
+    public void zoomOut() {
+        float zoomFactor = 0.9f;
+        fieldOfViewDegrees /= zoomFactor;
+        float near = 0.1f;
+        float far = 1000.0f;
+        float aspectRatio = (float) screenHeight / (float) screenWidth;
+        projectionMatrix4x4 = createProjectionMatrix(fieldOfViewDegrees, aspectRatio, near, far);
+        repaint();
+    }
+
+
+    public void resetCamera() {
+        camera = new Coordinates(0, 0, 0);
+        lookingDirection = new Coordinates(0, 0, 1);
+        cameraRotationInY = 0;
+        cameraRotationInX = 0;
+        cameraRotationInZ = 0;
+        fieldOfViewDegrees = 90.0f;
+
+        float near = 0.1f;
+        float far = 1000.0f;
+        float aspectRatio = (float) screenHeight / (float) screenWidth;
+        projectionMatrix4x4 = createProjectionMatrix(fieldOfViewDegrees, aspectRatio, near, far);
+
+        repaint();
+    }
+
 
     public void handleKeyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -322,10 +388,18 @@ public class Scene extends JPanel {
             case KeyEvent.VK_DOWN -> moveDown();
             case KeyEvent.VK_W -> moveForward();
             case KeyEvent.VK_S -> moveBackward();
-            case KeyEvent.VK_A -> turnLeft();
-            case KeyEvent.VK_D -> turnRight();
+            case KeyEvent.VK_A -> lookLeft();
+            case KeyEvent.VK_D -> lookRight();
+            case KeyEvent.VK_Z -> zoomIn();
+            case KeyEvent.VK_X -> zoomOut();
+            case KeyEvent.VK_O -> resetCamera();
+            case KeyEvent.VK_U -> lookUp();
+            case KeyEvent.VK_B -> lookDown();
+            case KeyEvent.VK_I -> rotateZ(2);
+            case KeyEvent.VK_K -> rotateZ(-2);
         }
     }
 
-
+    public void handleKeyReleased(KeyEvent e) {
+    }
 }
