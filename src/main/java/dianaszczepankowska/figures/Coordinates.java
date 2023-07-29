@@ -57,7 +57,7 @@ public record Coordinates(float x, float y, float z, float w) {
         return new Coordinates(x, y, z);
     }
 
-    float vectorLength() {
+    public float vectorLength() {
         return (float) Math.sqrt(this.dotProduct(this));
     }
 

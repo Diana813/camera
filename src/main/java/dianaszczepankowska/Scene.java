@@ -61,7 +61,7 @@ public class Scene extends JPanel {
         }
 
         // Start the update loop
-        /*Timer timer = new Timer(16, e -> {
+     /*   Timer timer = new Timer(16, e -> {
             fTheta += 0.02f;
             repaint();
         });
@@ -86,7 +86,6 @@ public class Scene extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                handleKeyReleased(e);
             }
         });
     }
@@ -183,6 +182,7 @@ public class Scene extends JPanel {
                     triProjected.coordinates()[1] = clippedTriangle.coordinates()[1].multiplyByMatrix(projectionMatrix4x4);
                     triProjected.coordinates()[2] = clippedTriangle.coordinates()[2].multiplyByMatrix(projectionMatrix4x4);
                     scaleIntoView(triProjected);
+                    fitIntoProjectionMatrix(triProjected, triViewed);
 
                     triProjected = new Triangle(
                             new Coordinates(triProjected.coordinates()[0].x() * -1, triProjected.coordinates()[0].y() * -1, triProjected.coordinates()[0].z()),
@@ -194,7 +194,7 @@ public class Scene extends JPanel {
                     Coordinates vOffsetView = new Coordinates(1, 1, 0);
                     triProjected.coordinates()[0] = triProjected.coordinates()[0].add(vOffsetView);
                     triProjected.coordinates()[1] = triProjected.coordinates()[1].add(vOffsetView);
-                    triProjected.coordinates()[2] = triProjected.coordinates()[1].add(vOffsetView);
+                    triProjected.coordinates()[2] = triProjected.coordinates()[2].add(vOffsetView);
 
                     triProjected = new Triangle(
                             new Coordinates(triProjected.coordinates()[0].x() * 0.5f * (float) screenWidth, triProjected.coordinates()[0].y() * 0.5f * screenHeight, triProjected.coordinates()[0].z()),
@@ -231,10 +231,14 @@ public class Scene extends JPanel {
                     nNewTriangles--;
 
                     switch (p) {
-                        case 0 -> nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.0f), new Coordinates(0.0f, 1.0f, 0.0f), test);
-                        case 1 -> nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, (float) screenHeight - 1, 0.0f), new Coordinates(0.0f, -1.0f, 0.0f), test);
-                        case 2 -> nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.0f), new Coordinates(1.0f, 0.0f, 0.0f), test);
-                        case 3 -> nTrisToAdd = clipTriangleAgainstPlane(new Coordinates((float) screenWidth - 1, 0.0f, 0.0f), new Coordinates(-1.0f, 0.0f, 0.0f), test);
+                        case 0 ->
+                                nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.0f), new Coordinates(0.0f, 1.0f, 0.0f), test);
+                        case 1 ->
+                                nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, (float) screenHeight - 1, 0.0f), new Coordinates(0.0f, -1.0f, 0.0f), test);
+                        case 2 ->
+                                nTrisToAdd = clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.0f), new Coordinates(1.0f, 0.0f, 0.0f), test);
+                        case 3 ->
+                                nTrisToAdd = clipTriangleAgainstPlane(new Coordinates((float) screenWidth - 1, 0.0f, 0.0f), new Coordinates(-1.0f, 0.0f, 0.0f), test);
                     }
 
                     listTriangles.addAll(nTrisToAdd);
@@ -289,31 +293,39 @@ public class Scene extends JPanel {
     }
 
     public void moveLeft() {
-        float x = camera.x() + (8.0f * 5f);
+        float x = camera.x() + (8.0f * 0.1f);
         camera = new Coordinates(x, camera.y(), camera.z());
         repaint();
     }
 
     public void moveRight() {
-        float x = camera.x() - (8.0f * 5f);
+        float x = camera.x() - (8.0f * 0.1f);
         camera = new Coordinates(x, camera.y(), camera.z());
         repaint();
     }
 
     public void moveUp() {
-        float y = camera.y() - (8.0f * 5f);
+        float y = camera.y() - (8.0f * 0.1f);
         camera = new Coordinates(camera.x(), y, camera.z());
         repaint();
     }
 
     public void moveDown() {
-        float y = camera.y() + (8.0f * 5f);
+        float y = camera.y() + (8.0f * 0.1f);
         camera = new Coordinates(camera.x(), y, camera.z());
         repaint();
     }
 
-    public void stopMoving() {
+    public void moveForward() {
+        float z = camera.z() + (8.0f * 0.1f);
+        camera = new Coordinates(camera.x(), camera.y(), z);
+        repaint();
+    }
 
+    public void moveBackward() {
+        float z = camera.z() - (8.0f * 0.1f);
+        camera = new Coordinates(camera.x(), camera.y(), z);
+        repaint();
     }
 
     public void handleKeyPressed(KeyEvent e) {
@@ -323,13 +335,10 @@ public class Scene extends JPanel {
             case KeyEvent.VK_RIGHT -> moveRight();
             case KeyEvent.VK_UP -> moveUp();
             case KeyEvent.VK_DOWN -> moveDown();
+            case KeyEvent.VK_W -> moveForward();
+            case KeyEvent.VK_S -> moveBackward();
         }
     }
 
-    public void handleKeyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-        switch (key) {
-            case KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN -> stopMoving();
-        }
-    }
+
 }
