@@ -4,8 +4,6 @@ import dianaszczepankowska.Matrix;
 
 public record Coordinates(float x, float y, float z, float w) {
 
-
-
     public Coordinates(float x, float y, float z) {
         this(x, y, z, 1);
     }

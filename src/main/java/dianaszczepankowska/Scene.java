@@ -21,7 +21,7 @@ public class Scene extends JPanel {
 
     private final List<Figure> cubes;
     private final Matrix projectionMatrix4x4;
-    private float fTheta;
+    private final float fTheta;
     private final BufferedImage backBuffer;
     private final Graphics2D backBufferGraphics;
 
@@ -30,26 +30,23 @@ public class Scene extends JPanel {
 
     private Coordinates camera;
 
-    private Coordinates forward;
+    private Coordinates lookingDirection;
 
-    private Coordinates lookingDirection = new Coordinates(0, 0, 0);
-
-    private float cameraRotationInYZ;
+    private float cameraRotationInYZ =0;
 
     private static final int OFFSET = 0;
-    float dp;
 
     public Scene(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.camera = new Coordinates(0, 0, 0);
-
+        this.lookingDirection = new Coordinates(0, 0, 1);
 
         fTheta = 0.0f;
 
         cubes = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             Figure cube;
             if (i % 2 == 0) {
                 cube = createCube(0, 0, (float) (1.5 * i));
@@ -60,8 +57,8 @@ public class Scene extends JPanel {
             cubes.add(cube);
         }
 
-        // Start the update loop
-     /*   Timer timer = new Timer(16, e -> {
+      /*  // Start the update loop
+        Timer timer = new Timer(16, e -> {
             fTheta += 0.02f;
             repaint();
         });
@@ -121,8 +118,7 @@ public class Scene extends JPanel {
         Coordinates up = new Coordinates(0, 1, 0);
         Coordinates target = new Coordinates(0, 0, 1);
         Matrix matCameraRot = Matrix.createRotationYMatrix(cameraRotationInYZ);
-        lookingDirection = target.multiplyByMatrix(matCameraRot);
-        forward = lookingDirection.multiply(8.0f * 1.5f);
+        lookingDirection = target.multiplyByMatrix(matCameraRot).multiply(0.8f * 1.5f);
         target = camera.add(lookingDirection);
         Matrix matCamera = Matrix.pointAt(camera, target, up);
 
@@ -167,12 +163,10 @@ public class Scene extends JPanel {
 
 
             if (normal.dotProduct(cameraRay) < 0.0f) {
-                Coordinates lightDirection = new Coordinates(0.0f, 1.0f, -1.0f).normalize();
-                dp = Math.max(0.5f, lightDirection.dotProduct(normal));
-                Color newColor = applyLighting(triProjected.color(), dp, 1.5f);
                 triViewed.coordinates()[0] = triTransformed.coordinates()[0].multiplyByMatrix(matView);
                 triViewed.coordinates()[1] = triTransformed.coordinates()[1].multiplyByMatrix(matView);
                 triViewed.coordinates()[2] = triTransformed.coordinates()[2].multiplyByMatrix(matView);
+
 
                 List<Triangle> clippedTriangles = clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.1f), new Coordinates(0.0f, 0.0f, 1.0f), triViewed);
 
@@ -181,8 +175,7 @@ public class Scene extends JPanel {
                     triProjected.coordinates()[0] = clippedTriangle.coordinates()[0].multiplyByMatrix(projectionMatrix4x4);
                     triProjected.coordinates()[1] = clippedTriangle.coordinates()[1].multiplyByMatrix(projectionMatrix4x4);
                     triProjected.coordinates()[2] = clippedTriangle.coordinates()[2].multiplyByMatrix(projectionMatrix4x4);
-                    scaleIntoView(triProjected);
-                    fitIntoProjectionMatrix(triProjected, triViewed);
+                    //scaleIntoView(triProjected);
 
                     triProjected = new Triangle(
                             new Coordinates(triProjected.coordinates()[0].x() * -1, triProjected.coordinates()[0].y() * -1, triProjected.coordinates()[0].z()),
@@ -227,7 +220,7 @@ public class Scene extends JPanel {
             for (int p = 0; p < 4; p++) {
                 List<Triangle> nTrisToAdd = new ArrayList<>();
                 while (nNewTriangles > 0) {
-                    Triangle test = listTriangles.removeFirst();
+                    Triangle test = listTriangles.removeLast();
                     nNewTriangles--;
 
                     switch (p) {
@@ -264,67 +257,59 @@ public class Scene extends JPanel {
         );
     }
 
-    private void fitIntoProjectionMatrix(Triangle triProjected, Triangle triRotatedZ) {
-        triProjected.coordinates()[0] = triRotatedZ.coordinates()[0].multiplyByMatrix(projectionMatrix4x4);
-        triProjected.coordinates()[1] = triRotatedZ.coordinates()[1].multiplyByMatrix(projectionMatrix4x4);
-        triProjected.coordinates()[2] = triRotatedZ.coordinates()[2].multiplyByMatrix(projectionMatrix4x4);
-    }
-
-    private void scaleIntoView(Triangle triProjected) {
-        triProjected.coordinates()[0] = triProjected.coordinates()[0].divide(triProjected.coordinates()[0].w());
-        triProjected.coordinates()[1] = triProjected.coordinates()[1].divide(triProjected.coordinates()[1].w());
-        triProjected.coordinates()[2] = triProjected.coordinates()[2].divide(triProjected.coordinates()[2].w());
-    }
-
-    private Color applyLighting(Color originalColor, float dp, float brightnessFactor) {
-        int red = originalColor.getRed();
-        int green = originalColor.getGreen();
-        int blue = originalColor.getBlue();
-
-        red *= dp * brightnessFactor;
-        green *= dp * brightnessFactor;
-        blue *= dp * brightnessFactor;
-
-        red = Math.min(255, Math.max(0, red));
-        green = Math.min(255, Math.max(0, green));
-        blue = Math.min(255, Math.max(0, blue));
-
-        return new Color(red, green, blue);
-    }
-
     public void moveLeft() {
-        float x = camera.x() + (8.0f * 0.1f);
+        float x = camera.x() + (8.0f * 0.01f);
         camera = new Coordinates(x, camera.y(), camera.z());
         repaint();
     }
 
     public void moveRight() {
-        float x = camera.x() - (8.0f * 0.1f);
+        float x = camera.x() - (8.0f * 0.01f);
         camera = new Coordinates(x, camera.y(), camera.z());
         repaint();
     }
 
     public void moveUp() {
-        float y = camera.y() - (8.0f * 0.1f);
+        float y = camera.y() - (8.0f * 0.01f);
         camera = new Coordinates(camera.x(), y, camera.z());
         repaint();
     }
 
     public void moveDown() {
-        float y = camera.y() + (8.0f * 0.1f);
+        float y = camera.y() + (8.0f * 0.01f);
         camera = new Coordinates(camera.x(), y, camera.z());
         repaint();
     }
 
     public void moveForward() {
-        float z = camera.z() + (8.0f * 0.1f);
-        camera = new Coordinates(camera.x(), camera.y(), z);
+        float fElapsedTime = 0.01f;
+
+        Coordinates vForward = lookingDirection.multiply(8.0f * fElapsedTime);
+        camera = camera.add(vForward);
         repaint();
     }
 
     public void moveBackward() {
-        float z = camera.z() - (8.0f * 0.1f);
-        camera = new Coordinates(camera.x(), camera.y(), z);
+        float fElapsedTime = 0.01f;
+
+        Coordinates vBackward = lookingDirection.multiply(-8.0f * fElapsedTime);
+        camera = camera.add(vBackward);
+        repaint();
+    }
+
+    public void turnLeft() {
+        float fElapsedTime = 0.01f;
+
+        cameraRotationInYZ -= 2.0f * fElapsedTime;
+        lookingDirection = new Coordinates((float) Math.sin(cameraRotationInYZ), 0, (float) Math.cos(cameraRotationInYZ)).normalize();
+        repaint();
+    }
+
+    public void turnRight() {
+        float fElapsedTime = 0.01f;
+
+        cameraRotationInYZ += 2.0f * fElapsedTime;
+        lookingDirection = new Coordinates((float) Math.sin(cameraRotationInYZ), 0, (float) Math.cos(cameraRotationInYZ)).normalize();
         repaint();
     }
 
@@ -337,6 +322,8 @@ public class Scene extends JPanel {
             case KeyEvent.VK_DOWN -> moveDown();
             case KeyEvent.VK_W -> moveForward();
             case KeyEvent.VK_S -> moveBackward();
+            case KeyEvent.VK_A -> turnLeft();
+            case KeyEvent.VK_D -> turnRight();
         }
     }
 

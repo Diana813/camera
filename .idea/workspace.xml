@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="Add camera movement">
+    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="Working fine, but triangles are not drawn properly from time to time">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Scene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Triangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Triangle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690144906045</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Working fine, but triangles are not drawn properly from time to time">
+      <created>1690618402944</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1690618402944</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -169,6 +175,7 @@
     <MESSAGE value="create street view" />
     <MESSAGE value="add camera position to the view" />
     <MESSAGE value="Add camera movement" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add camera movement" />
+    <MESSAGE value="Working fine, but triangles are not drawn properly from time to time" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working fine, but triangles are not drawn properly from time to time" />
   </component>
 </project>
