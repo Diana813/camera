@@ -8,7 +8,7 @@ import dianaszczepankowska.utils.Matrix;
 
 public class Camera {
 
-    private static final float ELAPSED_TIME = 0.01f;
+    private static final float FRAME_DELTA_TIME = 0.01f;
     private static final float NEAR = 0.1f;
     private static final float FAR = 1000.0f;
     private static final float LOOKING_DIRECTION_FACTOR = 5f;
@@ -35,7 +35,7 @@ public class Camera {
     }
 
     public void moveLeft() {
-        float x = position.x() + (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        float x = position.x() + (LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = new Coordinates(x, position.y(), position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -43,7 +43,7 @@ public class Camera {
     }
 
     public void moveRight() {
-        float x = position.x() - (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        float x = position.x() - (LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = new Coordinates(x, position.y(), position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -51,7 +51,7 @@ public class Camera {
     }
 
     public void moveUp() {
-        float y = position.y() + (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        float y = position.y() + (LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = new Coordinates(position.x(), y, position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -59,7 +59,7 @@ public class Camera {
     }
 
     public void moveDown() {
-        float y = position.y() - (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        float y = position.y() - (LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = new Coordinates(position.x(), y, position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -67,7 +67,7 @@ public class Camera {
     }
 
     public void moveForward() {
-        Coordinates forward = lookingDirection.multiply(LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        Coordinates forward = lookingDirection.multiply(LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = position.add(forward);
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -75,7 +75,7 @@ public class Camera {
     }
 
     public void moveBackward() {
-        Coordinates backward = lookingDirection.multiply(-LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        Coordinates backward = lookingDirection.multiply(-LOOKING_DIRECTION_FACTOR * FRAME_DELTA_TIME);
         position = position.add(backward);
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -83,35 +83,35 @@ public class Camera {
     }
 
     public void lookLeft() {
-        rotationY -= 2.0f * ELAPSED_TIME;
+        rotationY -= 2.0f * FRAME_DELTA_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void lookRight() {
-        rotationY += 2.0f * ELAPSED_TIME;
+        rotationY += 2.0f * FRAME_DELTA_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void lookDown() {
-        rotationX += 2 * ELAPSED_TIME;
+        rotationX += 2 * FRAME_DELTA_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void lookUp() {
-        rotationX -= 2 * ELAPSED_TIME;
+        rotationX -= 2 * FRAME_DELTA_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void rotateZ(float angle) {
-        rotationZ += angle * ELAPSED_TIME;
+        rotationZ += angle * FRAME_DELTA_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }

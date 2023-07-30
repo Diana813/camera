@@ -27,16 +27,7 @@ public class Scene extends JPanel implements CameraListener {
 
         camera.setCameraListener(this);
 
-        for (int i = 0; i < 20; i++) {
-            Figure cube;
-            if (i % 2 == 0) {
-                cube = Figure.createCube(0, 0, (float) (1.5 * i));
-            } else {
-                cube = Figure.createCube(3, 0, (float) (1.5 * (i - 1)));
-            }
-
-            cubes.add(cube);
-        }
+        createStreetView();
 
         backBuffer = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
         backBufferGraphics = (Graphics2D) backBuffer.getGraphics();
@@ -64,5 +55,19 @@ public class Scene extends JPanel implements CameraListener {
         List<Triangle> triangleArrayList = new ArrayList<>();
         cubes.stream().map(Figure::triangles).forEach(triangleArrayList::addAll);
         renderer.drawTriangles(triangleArrayList, g);
+    }
+
+    private void createStreetView(){
+        for (int i = 0; i < 20; i++) {
+            Figure cube;
+            if (i % 2 == 0) {
+                cube = Figure.createCube(0, 0, (float) (1.5 * i));
+            } else {
+                cube = Figure.createCube(3, 0, (float) (1.5 * (i - 1)));
+            }
+
+            cubes.add(cube);
+        }
+
     }
 }

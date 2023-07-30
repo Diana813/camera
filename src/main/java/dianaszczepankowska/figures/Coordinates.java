@@ -44,7 +44,7 @@ public record Coordinates(float x, float y, float z, float w) {
         return divide(l);
     }
 
-    public float dotProduct(Coordinates coordinates) {
+    public float dot(Coordinates coordinates) {
         return this.x * coordinates.x + this.y * coordinates.y + this.z * coordinates.z;
     }
 
@@ -56,19 +56,18 @@ public record Coordinates(float x, float y, float z, float w) {
     }
 
     public float vectorLength() {
-        return (float) Math.sqrt(this.dotProduct(this));
+        return (float) Math.sqrt(this.dot(this));
     }
 
 
-    public static Coordinates intersectPlane(Coordinates planeP, Coordinates planeN, Coordinates lineStart, Coordinates lineEnd)
-    {
-        planeN = planeN.normalize();
-        float planeD = - planeN.dotProduct(planeP);
-        float ad = lineStart.dotProduct(planeN);
-        float bd = lineEnd.dotProduct(planeN);
-        float t = (-planeD - ad) / (bd - ad);
+    public static Coordinates calculatePlaneLineIntersection(Coordinates planePoint, Coordinates planeNormal, Coordinates lineStart, Coordinates lineEnd) {
+        planeNormal = planeNormal.normalize();
+        float planeD = - planeNormal.dot(planePoint);
+        float distanceFromLineStartToPlane = lineStart.dot(planeNormal);
+        float distanceFromLineEndToPlane = lineEnd.dot(planeNormal);
+        float intersectionParameter = (-planeD - distanceFromLineStartToPlane) / (distanceFromLineEndToPlane - distanceFromLineStartToPlane);
         Coordinates lineStartToEnd = lineEnd.subtract(lineStart);
-        Coordinates lineToIntersect = lineStartToEnd.multiply(t);
+        Coordinates lineToIntersect = lineStartToEnd.multiply(intersectionParameter);
         return lineStart.add(lineToIntersect);
     }
 

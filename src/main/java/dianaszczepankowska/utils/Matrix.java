@@ -95,7 +95,7 @@ public record Matrix(float[][] m) {
     public static Matrix pointAt(Coordinates position, Coordinates target, Coordinates up) {
         Coordinates newForward = target.subtract(position).normalize();
 
-        Coordinates a = newForward.multiply(up.dotProduct(newForward));
+        Coordinates a = newForward.multiply(up.dot(newForward));
         Coordinates newUp = up.subtract(a).normalize();
 
         Coordinates newRight = newUp.crossProduct(newForward);
