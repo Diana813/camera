@@ -11,76 +11,29 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SceneRenderer {
-    private static final int OFFSET = 0;
-
     private final Camera camera;
 
     public SceneRenderer(Camera camera) {
         this.camera = camera;
     }
 
-
-    void drawTriangles(List<Triangle> scene, Graphics g) {
-
+    public void drawTriangles(List<Triangle> scene, Graphics g) {
         float theta = 0;
-        Matrix rotationX = Matrix.createRotationXMatrix(theta);
-        Matrix rotationZ = Matrix.createRotationZMatrix(theta);
-
-        Matrix matTrans = Matrix.createTranslationMatrix(0, 0, 5);
-
-        Matrix matWorld = Matrix.createIdentityMatrix().multiplyMatrix(rotationZ).multiplyMatrix(rotationX).multiplyMatrix(matTrans);
+        Matrix matWorld = createWorldMatrix(theta);
 
         Coordinates up = new Coordinates(0, 1, 0);
         Coordinates target = new Coordinates(0, 0, 1);
-        Matrix rotationYMatrix = Matrix.createRotationYMatrix(camera.getRotationY());
-        Matrix rotationXMatrix = Matrix.createRotationXMatrix(camera.getRotationX());
+        Matrix matView = handleCameraOrientation(camera, target, up);
 
-        camera.setLookingDirection(target.multiply(0.8f * 1.5f));
-
-        if(camera.getRotationY() != 0) {
-            camera.setLookingDirection(camera.getLookingDirection().multiplyByMatrix(rotationYMatrix));
-        }
-        if (camera.getRotationX() != 0) {
-            camera.setLookingDirection(camera.getLookingDirection().multiplyByMatrix(rotationXMatrix));
-        }
-
-
-        Matrix rotationZMatrix = Matrix.createRotationZMatrix(camera.getRotationZ());
-
-
-        target = camera.getPosition().add(camera.getLookingDirection());
-        Matrix matCamera = Matrix.pointAt(camera.getPosition(), target, up).multiplyMatrix(rotationZMatrix);
-
-        Matrix matView = matCamera.inverse();
         List<Triangle> trianglesToDraw = new ArrayList<>();
 
         for (Triangle tri : scene) {
-            Triangle triProjected = new Triangle(
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
-                    tri.color()
-            );
-
             Triangle triTransformed = new Triangle(
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
+                    tri.coordinates()[0].multiplyByMatrix(matWorld),
+                    tri.coordinates()[1].multiplyByMatrix(matWorld),
+                    tri.coordinates()[2].multiplyByMatrix(matWorld),
                     tri.color()
             );
-            Triangle triViewed = new Triangle(
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
-                    new Coordinates(0, 0, 0),
-                    tri.color()
-            );
-
-
-            triTransformed.coordinates()[0] = tri.coordinates()[0].multiplyByMatrix(matWorld);
-            triTransformed.coordinates()[1] = tri.coordinates()[1].multiplyByMatrix(matWorld);
-            triTransformed.coordinates()[2] = tri.coordinates()[2].multiplyByMatrix(matWorld);
-
-            triTransformed = offsetIntoScreen(triTransformed);
 
             Coordinates normal, line1, line2;
             line1 = triTransformed.coordinates()[1].subtract(triTransformed.coordinates()[0]);
@@ -90,61 +43,30 @@ public class SceneRenderer {
 
             Coordinates cameraRay = triTransformed.coordinates()[0].subtract(camera.getPosition());
 
-
             if (normal.dotProduct(cameraRay) < 0.0f) {
-                triViewed.coordinates()[0] = triTransformed.coordinates()[0].multiplyByMatrix(matView);
-                triViewed.coordinates()[1] = triTransformed.coordinates()[1].multiplyByMatrix(matView);
-                triViewed.coordinates()[2] = triTransformed.coordinates()[2].multiplyByMatrix(matView);
-
+                Triangle triViewed = new Triangle(
+                        triTransformed.coordinates()[0].multiplyByMatrix(matView),
+                        triTransformed.coordinates()[1].multiplyByMatrix(matView),
+                        triTransformed.coordinates()[2].multiplyByMatrix(matView),
+                        tri.color()
+                );
 
                 List<Triangle> clippedTriangles = triViewed.clipTriangleAgainstPlane(new Coordinates(0.0f, 0.0f, 0.1f), new Coordinates(0.0f, 0.0f, 1.0f));
 
                 for (Triangle clippedTriangle : clippedTriangles) {
-                    // Project triangles from 3D --> 2D
-                    triProjected.coordinates()[0] = clippedTriangle.coordinates()[0].multiplyByMatrix(camera.getProjectionMatrix4x4());
-                    triProjected.coordinates()[1] = clippedTriangle.coordinates()[1].multiplyByMatrix(camera.getProjectionMatrix4x4());
-                    triProjected.coordinates()[2] = clippedTriangle.coordinates()[2].multiplyByMatrix(camera.getProjectionMatrix4x4());
-
-                    triProjected = new Triangle(
-                            new Coordinates(triProjected.coordinates()[0].x() * -1, triProjected.coordinates()[0].y() * -1, triProjected.coordinates()[0].z()),
-                            new Coordinates(triProjected.coordinates()[1].x() * -1, triProjected.coordinates()[1].y() * -1, triProjected.coordinates()[0].z()),
-                            new Coordinates(triProjected.coordinates()[2].x() * -1, triProjected.coordinates()[2].y() * -1, triProjected.coordinates()[0].z()),
-                            triProjected.color()
-                    );
-
-                    Coordinates vOffsetView = new Coordinates(1, 1, 0);
-                    triProjected.coordinates()[0] = triProjected.coordinates()[0].add(vOffsetView);
-                    triProjected.coordinates()[1] = triProjected.coordinates()[1].add(vOffsetView);
-                    triProjected.coordinates()[2] = triProjected.coordinates()[2].add(vOffsetView);
-
-
-
-                    triProjected = new Triangle(
-                            new Coordinates(triProjected.coordinates()[0].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[0].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
-                            new Coordinates(triProjected.coordinates()[1].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[1].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
-                            new Coordinates(triProjected.coordinates()[2].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[2].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
-                            triProjected.color()
-                    );
-
+                    Triangle triProjected = projectTriangle(clippedTriangle, camera);
                     trianglesToDraw.add(triProjected);
                 }
-
             }
         }
 
         draw(g, trianglesToDraw);
-
     }
 
-    private Triangle offsetIntoScreen(Triangle triRotatedZX) {
-        return new Triangle(
-                new Coordinates(triRotatedZX.coordinates()[0].x(), triRotatedZX.coordinates()[0].y(), triRotatedZX.coordinates()[0].z() + OFFSET),
-                new Coordinates(triRotatedZX.coordinates()[1].x(), triRotatedZX.coordinates()[1].y(), triRotatedZX.coordinates()[1].z() + OFFSET),
-                new Coordinates(triRotatedZX.coordinates()[2].x(), triRotatedZX.coordinates()[2].y(), triRotatedZX.coordinates()[2].z() + OFFSET),
-                triRotatedZX.color()
-        );
+    public void clearScreen(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
-
 
     private void draw(Graphics g, List<Triangle> trianglesToDraw) {
         trianglesToDraw.sort((t1, t2) -> {
@@ -154,9 +76,9 @@ public class SceneRenderer {
         });
 
         clearScreen(g);
-        for (Triangle triToRaster : trianglesToDraw) {
+        for (Triangle triangleToRaster : trianglesToDraw) {
             LinkedList<Triangle> listTriangles = new LinkedList<>();
-            listTriangles.add(triToRaster);
+            listTriangles.add(triangleToRaster);
             int newTriangles = 1;
 
             for (int p = 0; p < 4; p++) {
@@ -190,9 +112,71 @@ public class SceneRenderer {
         }
     }
 
-    void clearScreen(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    private Matrix createWorldMatrix(float theta) {
+        Matrix rotationX = Matrix.createRotationXMatrix(theta);
+        Matrix rotationZ = Matrix.createRotationZMatrix(theta);
+        Matrix matTrans = Matrix.createTranslationMatrix(0, 0, 5);
+
+        return Matrix.createIdentityMatrix()
+                .multiplyMatrix(rotationZ)
+                .multiplyMatrix(rotationX)
+                .multiplyMatrix(matTrans);
+    }
+
+    private Matrix handleCameraOrientation(Camera camera, Coordinates target, Coordinates up) {
+        Matrix rotationYMatrix = Matrix.createRotationYMatrix(camera.getRotationY());
+        Matrix rotationXMatrix = Matrix.createRotationXMatrix(camera.getRotationX());
+
+        target = target.multiply(0.8f * 1.5f);
+
+        if (camera.getRotationY() != 0) {
+            target = target.multiplyByMatrix(rotationYMatrix);
+        }
+
+        if (camera.getRotationX() != 0) {
+            target = target.multiplyByMatrix(rotationXMatrix);
+        }
+
+        Matrix rotationZMatrix = Matrix.createRotationZMatrix(camera.getRotationZ());
+
+        target = camera.getPosition().add(target);
+        Matrix matCamera = Matrix.pointAt(camera.getPosition(), target, up).multiplyMatrix(rotationZMatrix);
+
+        return matCamera.inverse();
+    }
+
+    private Triangle projectTriangle(Triangle tri, Camera camera) {
+        Triangle triProjected = new Triangle(
+                new Coordinates(0, 0, 0),
+                new Coordinates(0, 0, 0),
+                new Coordinates(0, 0, 0),
+                tri.color()
+        );
+
+        triProjected.coordinates()[0] = tri.coordinates()[0].multiplyByMatrix(camera.getProjectionMatrix4x4());
+        triProjected.coordinates()[1] = tri.coordinates()[1].multiplyByMatrix(camera.getProjectionMatrix4x4());
+        triProjected.coordinates()[2] = tri.coordinates()[2].multiplyByMatrix(camera.getProjectionMatrix4x4());
+
+        triProjected = new Triangle(
+                new Coordinates(triProjected.coordinates()[0].x() * -1, triProjected.coordinates()[0].y() * -1, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[1].x() * -1, triProjected.coordinates()[1].y() * -1, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[2].x() * -1, triProjected.coordinates()[2].y() * -1, triProjected.coordinates()[0].z()),
+                triProjected.color()
+        );
+
+        Coordinates offsetView = new Coordinates(1, 1, 0);
+        triProjected.coordinates()[0] = triProjected.coordinates()[0].add(offsetView);
+        triProjected.coordinates()[1] = triProjected.coordinates()[1].add(offsetView);
+        triProjected.coordinates()[2] = triProjected.coordinates()[2].add(offsetView);
+
+        triProjected = new Triangle(
+                new Coordinates(triProjected.coordinates()[0].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[0].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[1].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[1].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
+                new Coordinates(triProjected.coordinates()[2].x() * 0.5f * (float) SCREEN_WIDTH, triProjected.coordinates()[2].y() * 0.5f * SCREEN_HEIGHT, triProjected.coordinates()[0].z()),
+                triProjected.color()
+        );
+
+        return triProjected;
     }
 
 }

@@ -4,13 +4,13 @@ package dianaszczepankowska.figures;
 import java.awt.Color;
 import java.util.ArrayList;
 
-public record Figure(ArrayList<Triangle> tris) {
+public record Figure(ArrayList<Triangle> triangles) {
     public Figure(){
         this(new ArrayList<>());
     }
 
     public void add(Triangle t) {
-        tris.add(t);
+        triangles.add(t);
     }
 
     public static Figure createCube(float x, float y, float z) {

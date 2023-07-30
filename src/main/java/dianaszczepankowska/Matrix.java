@@ -2,13 +2,12 @@ package dianaszczepankowska;
 
 import dianaszczepankowska.figures.Coordinates;
 
-public class Matrix {
-    public float[][] m = new float[4][4];
+public record Matrix(float[][] m) {
 
     public Matrix() {
-        int size = 4;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        this(new float[4][4]);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 m[i][j] = 0.0f;
             }
         }

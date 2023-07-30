@@ -62,7 +62,7 @@ public class Scene extends JPanel implements CameraListener {
         super.paint(g);
         renderer.clearScreen(g);
         List<Triangle> triangleArrayList = new ArrayList<>();
-        cubes.stream().map(Figure::tris).forEach(triangleArrayList::addAll);
+        cubes.stream().map(Figure::triangles).forEach(triangleArrayList::addAll);
         renderer.drawTriangles(triangleArrayList, g);
     }
 }

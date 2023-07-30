@@ -8,9 +8,9 @@ import dianaszczepankowska.figures.Coordinates;
 public class Camera {
 
     private static final float ELAPSED_TIME = 0.01f;
-
     private static final float NEAR = 0.1f;
     private static final float FAR = 1000.0f;
+    private static final float LOOKING_DIRECTION_FACTOR = 5f;
     private Coordinates position;
     private Coordinates lookingDirection;
     private float rotationY;
@@ -34,7 +34,7 @@ public class Camera {
     }
 
     public void moveLeft() {
-        float x = position.x() + (8.0f * ELAPSED_TIME);
+        float x = position.x() + (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
         position = new Coordinates(x, position.y(), position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -42,7 +42,7 @@ public class Camera {
     }
 
     public void moveRight() {
-        float x = position.x() - (8.0f * ELAPSED_TIME);
+        float x = position.x() - (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
         position = new Coordinates(x, position.y(), position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -50,7 +50,7 @@ public class Camera {
     }
 
     public void moveUp() {
-        float y = position.y() + (8.0f * ELAPSED_TIME);
+        float y = position.y() + (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
         position = new Coordinates(position.x(), y, position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -58,7 +58,7 @@ public class Camera {
     }
 
     public void moveDown() {
-        float y = position.y() - (8.0f * ELAPSED_TIME);
+        float y = position.y() - (LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
         position = new Coordinates(position.x(), y, position.z());
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -66,16 +66,16 @@ public class Camera {
     }
 
     public void moveForward() {
-        Coordinates vForward = lookingDirection.multiply(8.0f * ELAPSED_TIME);
-        position = position.add(vForward);
+        Coordinates forward = lookingDirection.multiply(LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        position = position.add(forward);
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void moveBackward() {
-        Coordinates vBackward = lookingDirection.multiply(-8.0f * ELAPSED_TIME);
-        position = position.add(vBackward);
+        Coordinates backward = lookingDirection.multiply(-LOOKING_DIRECTION_FACTOR * ELAPSED_TIME);
+        position = position.add(backward);
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
@@ -154,10 +154,6 @@ public class Camera {
 
     public Coordinates getPosition() {
         return position;
-    }
-
-    public Coordinates getLookingDirection() {
-        return lookingDirection;
     }
 
     public void setLookingDirection(Coordinates lookingDirection) {
