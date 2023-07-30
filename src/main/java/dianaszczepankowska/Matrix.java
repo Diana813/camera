@@ -82,11 +82,11 @@ public class Matrix {
         return projectionMatrix4x4;
     }
 
-    public Matrix multiplyMatrix(Matrix matrix4x4) {
+    public Matrix multiplyMatrix(Matrix matrix) {
         Matrix result = new Matrix();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                result.m[j][i] = this.m[j][0] * matrix4x4.m[0][i] + this.m[j][1] * matrix4x4.m[1][i] + this.m[j][2] * matrix4x4.m[2][i] + this.m[j][3] * matrix4x4.m[3][i];
+                result.m[j][i] = this.m[j][0] * matrix.m[0][i] + this.m[j][1] * matrix.m[1][i] + this.m[j][2] * matrix.m[2][i] + this.m[j][3] * matrix.m[3][i];
             }
         }
         return result;

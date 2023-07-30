@@ -11,30 +11,30 @@ public record Triangle(Coordinates[] coordinates, Color color) {
         this(new Coordinates[]{p0, p1, p2}, color);
     }
 
-    public static List<Triangle> clipTriangleAgainstPlane(Coordinates plane_p, Coordinates plane_n, Triangle in_tri) {
+    public List<Triangle> clipTriangleAgainstPlane(Coordinates plane_p, Coordinates plane_n) {
         plane_n = plane_n.normalize();
 
         List<Coordinates> insidePoints = new ArrayList<>();
         List<Coordinates> outsidePoints = new ArrayList<>();
 
-        float d0 = plane_n.dotProduct(in_tri.coordinates()[0]) - plane_n.dotProduct(plane_p);
-        float d1 = plane_n.dotProduct(in_tri.coordinates()[1]) - plane_n.dotProduct(plane_p);
-        float d2 = plane_n.dotProduct(in_tri.coordinates()[2]) - plane_n.dotProduct(plane_p);
+        float d0 = plane_n.dotProduct(this.coordinates()[0]) - plane_n.dotProduct(plane_p);
+        float d1 = plane_n.dotProduct(this.coordinates()[1]) - plane_n.dotProduct(plane_p);
+        float d2 = plane_n.dotProduct(this.coordinates()[2]) - plane_n.dotProduct(plane_p);
 
         if (d0 >= 0) {
-            insidePoints.add(in_tri.coordinates()[0]);
+            insidePoints.add(this.coordinates()[0]);
         } else {
-            outsidePoints.add(in_tri.coordinates()[0]);
+            outsidePoints.add(this.coordinates()[0]);
         }
         if (d1 >= 0) {
-            insidePoints.add(in_tri.coordinates()[1]);
+            insidePoints.add(this.coordinates()[1]);
         } else {
-            outsidePoints.add(in_tri.coordinates()[1]);
+            outsidePoints.add(this.coordinates()[1]);
         }
         if (d2 >= 0) {
-            insidePoints.add(in_tri.coordinates()[2]);
+            insidePoints.add(this.coordinates()[2]);
         } else {
-            outsidePoints.add(in_tri.coordinates()[2]);
+            outsidePoints.add(this.coordinates()[2]);
         }
 
         List<Triangle> out_triangles = new ArrayList<>();
@@ -44,12 +44,12 @@ public record Triangle(Coordinates[] coordinates, Color color) {
         }
 
         if (insidePoints.size() == 3) {
-            out_triangles.add(in_tri);
+            out_triangles.add(this);
             return out_triangles;
         }
 
         if (insidePoints.size() == 1) {
-            Color color = in_tri.color;
+            Color color = this.color;
             Coordinates c0 = insidePoints.get(0);
             Coordinates c1 = intersectPlane(plane_p, plane_n, insidePoints.get(0), outsidePoints.get(0));
             Coordinates c2 = intersectPlane(plane_p, plane_n, insidePoints.get(0), outsidePoints.get(1));
@@ -59,7 +59,7 @@ public record Triangle(Coordinates[] coordinates, Color color) {
         }
 
 
-        Color color = in_tri.color;
+        Color color = this.color;
 
         Coordinates c0 = insidePoints.get(0);
         Coordinates c1 = insidePoints.get(1);

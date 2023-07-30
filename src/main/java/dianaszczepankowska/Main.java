@@ -5,12 +5,16 @@ import javax.swing.SwingUtilities;
 
 
 public class Main extends JFrame {
+
+    public static final int SCREEN_WIDTH = 1600;
+    public static final int SCREEN_HEIGHT = 1000;
+
     public Main() {
         setTitle("Wirtualna kamera");
-        setSize(1600, 1000);
+        setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Scene scene = new Scene(getWidth(), getHeight());
+        Scene scene = new Scene();
         add(scene);
         setVisible(true);
     }
