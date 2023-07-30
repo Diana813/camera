@@ -27,7 +27,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_X -> camera.zoomOut();
             case KeyEvent.VK_O -> camera.resetCamera();
             case KeyEvent.VK_U -> camera.lookUp();
-            case KeyEvent.VK_B -> camera.lookDown();
+            case KeyEvent.VK_J -> camera.lookDown();
             case KeyEvent.VK_I -> camera.rotateZ(2);
             case KeyEvent.VK_K -> camera.rotateZ(-2);
         }

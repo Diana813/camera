@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="some more refactor">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="fix scene renderer">
       <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/utils/Matrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/SceneRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/SceneRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/figures/Coordinates.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,7 +312,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690738272466</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix scene renderer">
+      <created>1690741539184</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1690741539184</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -335,6 +344,7 @@
     <MESSAGE value="add look up and down, rotation Z not working properly" />
     <MESSAGE value="some refactor" />
     <MESSAGE value="some more refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="some more refactor" />
+    <MESSAGE value="fix scene renderer" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix scene renderer" />
   </component>
 </project>

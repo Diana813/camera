@@ -4,6 +4,7 @@ import static dianaszczepankowska.Main.SCREEN_HEIGHT;
 import static dianaszczepankowska.Main.SCREEN_WIDTH;
 import dianaszczepankowska.figures.Coordinates;
 import dianaszczepankowska.figures.Triangle;
+import dianaszczepankowska.utils.Matrix;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;

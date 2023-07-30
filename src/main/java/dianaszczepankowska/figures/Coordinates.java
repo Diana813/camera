@@ -1,6 +1,6 @@
 package dianaszczepankowska.figures;
 
-import dianaszczepankowska.Matrix;
+import dianaszczepankowska.utils.Matrix;
 
 public record Coordinates(float x, float y, float z, float w) {
 

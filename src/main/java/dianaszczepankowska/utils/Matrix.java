@@ -1,4 +1,4 @@
-package dianaszczepankowska;
+package dianaszczepankowska.utils;
 
 import dianaszczepankowska.figures.Coordinates;
 

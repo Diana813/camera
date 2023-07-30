@@ -3,6 +3,7 @@ package dianaszczepankowska;
 import static dianaszczepankowska.Main.SCREEN_HEIGHT;
 import static dianaszczepankowska.Main.SCREEN_WIDTH;
 import dianaszczepankowska.figures.Coordinates;
+import dianaszczepankowska.utils.Matrix;
 
 
 public class Camera {
@@ -96,14 +97,14 @@ public class Camera {
     }
 
     public void lookDown() {
-        rotationX -= 2 * ELAPSED_TIME;
+        rotationX += 2 * ELAPSED_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
     }
 
     public void lookUp() {
-        rotationX += 2 * ELAPSED_TIME;
+        rotationX -= 2 * ELAPSED_TIME;
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
         }
