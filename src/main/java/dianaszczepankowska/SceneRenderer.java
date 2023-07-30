@@ -20,10 +20,7 @@ public class SceneRenderer {
     public void drawTriangles(List<Triangle> scene, Graphics g) {
         float theta = 0;
         Matrix matWorld = createWorldMatrix(theta);
-
-        Coordinates up = new Coordinates(0, 1, 0);
-        Coordinates target = new Coordinates(0, 0, 1);
-        Matrix matView = handleCameraOrientation(camera, target, up);
+        Matrix matView = handleCameraOrientation(camera);
 
         List<Triangle> trianglesToDraw = new ArrayList<>();
 
@@ -123,23 +120,26 @@ public class SceneRenderer {
                 .multiplyMatrix(matTrans);
     }
 
-    private Matrix handleCameraOrientation(Camera camera, Coordinates target, Coordinates up) {
+    private Matrix handleCameraOrientation(Camera camera) {
+        Coordinates up = new Coordinates(0, 1, 0);
+        Coordinates target = new Coordinates(0, 0, 1);
         Matrix rotationYMatrix = Matrix.createRotationYMatrix(camera.getRotationY());
         Matrix rotationXMatrix = Matrix.createRotationXMatrix(camera.getRotationX());
 
-        target = target.multiply(0.8f * 1.5f);
+        camera.setLookingDirection(target.multiply(0.8f * 1.5f));
 
-        if (camera.getRotationY() != 0) {
-            target = target.multiplyByMatrix(rotationYMatrix);
+        if(camera.getRotationY() != 0) {
+            camera.setLookingDirection(camera.getLookingDirection().multiplyByMatrix(rotationYMatrix));
         }
-
         if (camera.getRotationX() != 0) {
-            target = target.multiplyByMatrix(rotationXMatrix);
+            camera.setLookingDirection(camera.getLookingDirection().multiplyByMatrix(rotationXMatrix));
         }
+
 
         Matrix rotationZMatrix = Matrix.createRotationZMatrix(camera.getRotationZ());
 
-        target = camera.getPosition().add(target);
+
+        target = camera.getPosition().add(camera.getLookingDirection());
         Matrix matCamera = Matrix.pointAt(camera.getPosition(), target, up).multiplyMatrix(rotationZMatrix);
 
         return matCamera.inverse();

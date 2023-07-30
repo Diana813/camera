@@ -185,4 +185,8 @@ public class Camera {
     public void setPosition(Coordinates position) {
         this.position = position;
     }
+
+    public Coordinates getLookingDirection() {
+        return lookingDirection;
+    }
 }
