@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="minor changes">
+    <list default="true" id="c8df2d34-db1a-4677-b79c-bbe66b04f9f3" name="Changes" comment="jar manifest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/SceneRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/SceneRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dianaszczepankowska/Camera.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +101,7 @@
       <recent name="dianaszczepankowska" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.wirtualna_kamera [jar]">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dianaszczepankowska.Main" />
       <module name="wirtualna_kamera.main" />
@@ -128,26 +128,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="wirtualna_kamera [buildDependents]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="buildDependents" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dianaszczepankowska.Main" />
+      <module name="wirtualna_kamera.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dianaszczepankowska.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="wirtualna_kamera [buildNeeded]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -235,11 +227,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.wirtualna_kamera [jar]" />
         <item itemvalue="Gradle.wirtualna_kamera [clean]" />
         <item itemvalue="Gradle.wirtualna_kamera [build]" />
         <item itemvalue="Gradle.wirtualna_kamera [buildNeeded]" />
-        <item itemvalue="Gradle.wirtualna_kamera [buildDependents]" />
       </list>
     </recent_temporary>
   </component>
@@ -336,7 +328,21 @@
       <option name="project" value="LOCAL" />
       <updated>1690741886831</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fix rotation z">
+      <created>1691315836526</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1691315836526</updated>
+    </task>
+    <task id="LOCAL-00014" summary="jar manifest">
+      <created>1691316055675</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1691316055675</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -363,6 +369,8 @@
     <MESSAGE value="some more refactor" />
     <MESSAGE value="fix scene renderer" />
     <MESSAGE value="minor changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
+    <MESSAGE value="fix rotation z" />
+    <MESSAGE value="jar manifest" />
+    <option name="LAST_COMMIT_MESSAGE" value="jar manifest" />
   </component>
 </project>

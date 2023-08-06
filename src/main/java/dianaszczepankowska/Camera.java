@@ -120,6 +120,7 @@ public class Camera {
     public void zoomIn() {
         float zoomFactor = 1.1f;
         fieldOfViewDegrees /= zoomFactor;
+        fieldOfViewDegrees = Math.max(1.0f, Math.min(179.0f, fieldOfViewDegrees));
         updateProjectionMatrix();
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
@@ -129,6 +130,7 @@ public class Camera {
     public void zoomOut() {
         float zoomFactor = 0.9f;
         fieldOfViewDegrees /= zoomFactor;
+        fieldOfViewDegrees = Math.max(1.0f, Math.min(179.0f, fieldOfViewDegrees));
         updateProjectionMatrix();
         if (listener != null) {
             listener.onCameraChange(position, lookingDirection);
