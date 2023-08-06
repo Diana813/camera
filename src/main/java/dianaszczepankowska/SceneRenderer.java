@@ -20,7 +20,8 @@ public class SceneRenderer {
 
     public void drawTriangles(List<Triangle> scene, Graphics g) {
         float theta = 0;
-        Matrix matWorld = createWorldMatrix(theta);
+        Matrix rotationZMatrix = Matrix.createRotationZMatrix(camera.getRotationZ());
+        Matrix matWorld = createWorldMatrix(theta).multiplyMatrix(rotationZMatrix);
         Matrix matView = handleCameraOrientation(camera);
 
         List<Triangle> trianglesToDraw = new ArrayList<>();
@@ -137,14 +138,12 @@ public class SceneRenderer {
         }
 
 
-        Matrix rotationZMatrix = Matrix.createRotationZMatrix(camera.getRotationZ());
-
-
         target = camera.getPosition().add(camera.getLookingDirection());
-        Matrix matCamera = Matrix.pointAt(camera.getPosition(), target, up).multiplyMatrix(rotationZMatrix);
+        Matrix matCamera = Matrix.pointAt(camera.getPosition(), target, up);
 
         return matCamera.inverse();
     }
+
 
     private Triangle projectTriangle(Triangle triangle, Camera camera) {
         Triangle triangleProjected = new Triangle(
