@@ -15,3 +15,9 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "dianaszczepankowska.Main"
+    }
+}

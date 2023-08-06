@@ -101,20 +101,7 @@
       <recent name="dianaszczepankowska" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="dianaszczepankowska.Main" />
-      <module name="wirtualna_kamera.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="dianaszczepankowska.figures.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Gradle.wirtualna_kamera [jar]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dianaszczepankowska.Main" />
       <module name="wirtualna_kamera.main" />
@@ -225,13 +212,34 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="wirtualna_kamera [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.wirtualna_kamera [jar]" />
+        <item itemvalue="Gradle.wirtualna_kamera [clean]" />
         <item itemvalue="Gradle.wirtualna_kamera [build]" />
         <item itemvalue="Gradle.wirtualna_kamera [buildNeeded]" />
         <item itemvalue="Gradle.wirtualna_kamera [buildDependents]" />
-        <item itemvalue="Gradle.wirtualna_kamera [clean]" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
